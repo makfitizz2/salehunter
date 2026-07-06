@@ -75,31 +75,64 @@
 <div class="container" id="container"></div>
 
 <script>
-async function load(query = "наушники") {
+<script>
+const database = [
+  { title: "Беспроводные наушники", price: 600, oldPrice: 3000, img: "https://via.placeholder.com/300", market: "Ozon" },
+  { title: "Игровая мышь", price: 500, oldPrice: 2500, img: "https://via.placeholder.com/300", market: "WB" },
+  { title: "Рюкзак городской", price: 800, oldPrice: 4000, img: "https://via.placeholder.com/300", market: "Ozon" },
+  { title: "Часы спортивные", price: 900, oldPrice: 4500, img: "https://via.placeholder.com/300", market: "WB" },
+  { title: "Кроссовки", price: 1200, oldPrice: 6000, img: "https://via.placeholder.com/300", market: "Ozon" }
+];
 
+function discount(item){
+  return Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100);
+}
+
+function render(list){
   const container = document.getElementById("container");
-  container.innerHTML = "Загрузка...";
+  container.innerHTML = "";
 
-  const res = await fetch(
-    `https://dummyjson.com/products/search?q=${query}`
+  list
+    .filter(i => discount(i) >= 70)
+    .forEach(i => {
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const d = discount(i);
+
+      card.innerHTML = `
+        <b>${i.title}</b>
+        <div class="discount">-${d}%</div>
+        <div>${i.price} ₽ вместо ${i.oldPrice} ₽</div>
+        <img src="${i.img}" />
+        <div class="btn">Открыть товар</div>
+      `;
+
+      card.onclick = () => {
+        window.open("https://www.ozon.ru", "_blank");
+      };
+
+      container.appendChild(card);
+    });
+}
+
+function search(q){
+  const result = database.filter(i =>
+    i.title.toLowerCase().includes(q.toLowerCase())
   );
 
-  const data = await res.json();
+  render(result);
+}
 
-  const products = data.products.map(p => {
-    const oldPrice = Math.round(p.price * 2);
-    const price = p.price;
-    const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+// стартовая загрузка
+search("");
 
-    return {
-      title: p.title,
-      price,
-      oldPrice,
-      discount,
-      image: p.thumbnail,
-      url: `https://www.ozon.ru/search/?text=${encodeURIComponent(p.title)}`
-    };
-  });
+// поиск
+document.getElementById("search").addEventListener("input", (e) => {
+  search(e.target.value);
+});
+</script>
 
   container.innerHTML = "";
 
