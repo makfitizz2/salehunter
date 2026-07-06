@@ -1,48 +1,37 @@
 export default async function handler(req, res) {
 
-  const CATEGORY_URL =
-    "https://www.wildberries.ru/catalog/obuv/zhenskaya";
+  const url =
+    "https://catalog.wb.ru/catalog/zhenshchinam/odezhda/platya/catalog?appType=1&curr=rub&dest=-1257786&page=1&sort=popular&spp=30";
 
   try {
 
-    const response = await fetch(CATEGORY_URL, {
+    const response = await fetch(url, {
       headers: {
         "User-Agent": "Mozilla/5.0"
       }
     });
 
-    const html = await response.text();
+    const data = await response.json();
 
-    // ищем JSON внутри страницы
-    const jsonMatch = html.match(/window.__INITIAL_STATE__\s*=\s*(\{.*\});/);
+    const products = data?.data?.products || [];
 
-    if (!jsonMatch) {
-      return res.status(200).json([]);
-    }
+    const result = [];
 
-    const data = JSON.parse(jsonMatch[1]);
+    for (const p of products) {
 
-    const productsRaw =
-      data?.catalog?.products ||
-      data?.products ||
-      [];
-
-    const results = [];
-
-    for (const p of productsRaw) {
-
-      const price = p.priceU ? p.priceU / 100 : null;
-      const oldPrice = p.salePriceU ? p.salePriceU / 100 : price;
+      const price = (p.salePriceU ?? p.priceU) / 100;
+      const oldPrice = (p.priceU ?? p.salePriceU) / 100;
 
       if (!price || !oldPrice) continue;
 
       const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
 
-      // строгие условия
+      // строгие правила
       if (price > 1000) continue;
       if (discount < 70) continue;
 
-      results.push({
+      result.push({
+        id: p.id,
         title: p.name,
         price,
         oldPrice,
@@ -52,9 +41,12 @@ export default async function handler(req, res) {
       });
     }
 
-    res.status(200).json(results);
+    res.status(200).json(result);
 
   } catch (e) {
-    res.status(500).json({ error: "parse_failed" });
+    res.status(500).json({
+      error: "wb_category_failed",
+      message: e.message
+    });
   }
 }
