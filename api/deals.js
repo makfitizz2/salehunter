@@ -1,14 +1,42 @@
 export default function handler(req, res) {
 
   const baseProducts = [
-    { title: "Рюкзак городской", price: 800, oldPrice: 4000 },
-    { title: "Наушники Bluetooth", price: 600, oldPrice: 3000 },
-    { title: "Игровая мышь", price: 500, oldPrice: 2500 },
-    { title: "Смарт-часы", price: 900, oldPrice: 4500 },
-    { title: "Кроссовки", price: 1200, oldPrice: 6000 },
-    { title: "Повербанк", price: 700, oldPrice: 3500 },
-    { title: "Фитнес-браслет", price: 650, oldPrice: 3200 },
-    { title: "Куртка зимняя", price: 1500, oldPrice: 7000 }
+    {
+      title: "Рюкзак городской",
+      price: 800,
+      oldPrice: 4000,
+      url: "https://www.wildberries.ru/catalog/123456/detail.aspx"
+    },
+    {
+      title: "Беспроводные наушники",
+      price: 600,
+      oldPrice: 3000,
+      url: "https://www.wildberries.ru/catalog/234567/detail.aspx"
+    },
+    {
+      title: "Игровая мышь RGB",
+      price: 500,
+      oldPrice: 2500,
+      url: "https://www.wildberries.ru/catalog/345678/detail.aspx"
+    },
+    {
+      title: "Смарт-часы Sport",
+      price: 900,
+      oldPrice: 4500,
+      url: "https://www.wildberries.ru/catalog/456789/detail.aspx"
+    },
+    {
+      title: "Кроссовки Running",
+      price: 1200,
+      oldPrice: 6000,
+      url: "https://www.wildberries.ru/catalog/567890/detail.aspx"
+    },
+    {
+      title: "Повербанк 20000",
+      price: 700,
+      oldPrice: 3500,
+      url: "https://www.wildberries.ru/catalog/678901/detail.aspx"
+    }
   ];
 
   const products = baseProducts.map(p => {
@@ -18,11 +46,10 @@ export default function handler(req, res) {
     return {
       ...p,
       discount,
-      image: "https://via.placeholder.com/500x400",
-      url: `https://www.ozon.ru/search/?text=${encodeURIComponent(p.title)}`
+      image: "https://via.placeholder.com/500x400"
     };
   })
-  .filter(p => p.discount >= 70); // 🔥 ВОТ ЖЁСТКИЙ ФИЛЬТР
+  .filter(p => p.discount >= 70); // 🔥 железный фильтр
 
   res.status(200).json(products);
 }
