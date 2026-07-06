@@ -45,4 +45,9 @@ async function init() {
   renderDeals(deals);
 }
 
-init();
+async function init() {
+  const query = "phone"; // можно менять на "shoes", "bag", "laptop"
+
+  const deals = await getDeals(query);
+  renderDeals(deals);
+}
