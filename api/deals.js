@@ -1,13 +1,14 @@
 export default async function handler(req, res) {
 
   const url =
-    "https://catalog.wb.ru/catalog/zhenshchinam/odezhda/platya/catalog?appType=1&curr=rub&dest=-1257786&page=1&sort=popular&spp=30";
+    "https://search.wb.ru/exactmatch/ru/common/v9/search?appType=1&curr=rub&dest=-1257786&query=платья&page=1&resultset=catalog&sort=popular&spp=30";
 
   try {
 
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0"
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
       }
     });
 
@@ -19,14 +20,14 @@ export default async function handler(req, res) {
 
     for (const p of products) {
 
-      const price = (p.salePriceU ?? p.priceU) / 100;
-      const oldPrice = (p.priceU ?? p.salePriceU) / 100;
+      const price = (p.salePriceU || p.priceU) / 100;
+      const oldPrice = (p.priceU || p.salePriceU) / 100;
 
       if (!price || !oldPrice) continue;
 
       const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
 
-      // строгие правила
+      // строгие условия
       if (price > 1000) continue;
       if (discount < 70) continue;
 
@@ -45,7 +46,7 @@ export default async function handler(req, res) {
 
   } catch (e) {
     res.status(500).json({
-      error: "wb_category_failed",
+      error: "wb_search_failed",
       message: e.message
     });
   }
