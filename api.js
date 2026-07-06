@@ -1,39 +1,22 @@
-export async function getDeals() {
-  // пока делаем “умный мок”, чтобы система была готова к реальным API
+export async function getDeals(query = "скидки") {
 
-  const raw = [
-  {
-    title: "Ozon товар 1",
-    oldPrice: 3000,
-    price: 800,
-    marketplace: "Ozon",
-    url: "https://www.ozon.ru",
-  },
-  {
-    title: "WB товар 2",
-    oldPrice: 2500,
-    price: 600,
-    marketplace: "WB",
-    url: "https://www.wildberries.ru",
-  },
-  {
-    title: "Ozon товар 3",
-    oldPrice: 1990,
-    price: 1200,
-    marketplace: "Ozon",
-    url: "https://www.ozon.ru",
-  },
-  {
-    title: "WB товар 4",
-    oldPrice: 5000,
-    price: 1000,
-    marketplace: "WB",
-    url: "https://www.wildberries.ru",
-  },
-];
+  const response = await fetch(
+    `https://dummyjson.com/products/search?q=${query}`
+  );
 
-  return raw.map(item => ({
-    ...item,
-    discount: Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100),
-  }));
+  const data = await response.json();
+
+  return data.products.map(p => {
+    const oldPrice = Math.round(p.price * 2);
+    const price = p.price;
+
+    return {
+      title: p.title,
+      oldPrice,
+      price,
+      discount: Math.round(((oldPrice - price) / oldPrice) * 100),
+      marketplace: "Demo data",
+      url: "https://example.com",
+    };
+  });
 }
