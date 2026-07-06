@@ -31,7 +31,7 @@
     .container {
       padding: 15px;
       display: grid;
-      gap: 10px;
+      gap: 12px;
     }
 
     .card {
@@ -44,6 +44,7 @@
     .discount {
       color: green;
       font-weight: bold;
+      margin-top: 5px;
     }
 
     img {
@@ -53,14 +54,12 @@
     }
 
     .btn {
-      display: inline-block;
       margin-top: 8px;
-      padding: 6px 10px;
+      display: inline-block;
+      padding: 8px 10px;
       background: black;
       color: white;
       border-radius: 6px;
-      text-decoration: none;
-      cursor: pointer;
       text-align: center;
     }
   </style>
@@ -72,10 +71,11 @@
 🔥 SaleHunter — скидки 70%+
 </header>
 
-<input id="search" placeholder="поиск: наушники, рюкзак, телефон..." />
+<input id="search" placeholder="поиск товаров..." />
 
 <div class="container" id="container"></div>
 
+<script>
 async function load() {
 
   const res = await fetch("/api/deals");
@@ -93,8 +93,10 @@ async function load() {
       <b>${p.title}</b>
       <div class="discount">-${p.discount}%</div>
       <div>${p.price} ₽ вместо ${p.oldPrice} ₽</div>
+
       <img src="${p.image}" />
-      <div class="btn">Открыть</div>
+
+      <div class="btn">Открыть товар</div>
     `;
 
     card.onclick = () => window.open(p.url, "_blank");
@@ -103,54 +105,11 @@ async function load() {
   });
 }
 
-load();
-
-function getDiscount(item) {
-  return Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100);
-}
-
-function render(list) {
-  const container = document.getElementById("container");
-  container.innerHTML = "";
-
-  list
-    .filter(i => getDiscount(i) >= 70)
-    .forEach(i => {
-
-      const d = getDiscount(i);
-
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <b>${i.title}</b>
-        <div class="discount">-${d}%</div>
-        <div>${i.price} ₽ вместо ${i.oldPrice} ₽</div>
-
-        <img src="${i.img}" />
-
-        <div class="btn">Открыть товар</div>
-      `;
-
-      card.onclick = () => window.open(i.url, "_blank");
-
-      container.appendChild(card);
-    });
-}
-
-function search(q) {
-  const result = database.filter(i =>
-    i.title.toLowerCase().includes(q.toLowerCase())
-  );
-
-  render(result);
-}
-
-document.getElementById("search").addEventListener("input", (e) => {
-  search(e.target.value);
+document.getElementById("search").addEventListener("input", () => {
+  load();
 });
 
-search("");
+load();
 </script>
 
 </body>
