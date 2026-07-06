@@ -1,55 +1,55 @@
-export default function handler(req, res) {
+export default async function handler(req, res) {
 
-  const baseProducts = [
-    {
-      title: "Рюкзак городской",
-      price: 800,
-      oldPrice: 4000,
-      url: "https://www.wildberries.ru/catalog/123456/detail.aspx"
-    },
-    {
-      title: "Беспроводные наушники",
-      price: 600,
-      oldPrice: 3000,
-      url: "https://www.wildberries.ru/catalog/234567/detail.aspx"
-    },
-    {
-      title: "Игровая мышь RGB",
-      price: 500,
-      oldPrice: 2500,
-      url: "https://www.wildberries.ru/catalog/345678/detail.aspx"
-    },
-    {
-      title: "Смарт-часы Sport",
-      price: 900,
-      oldPrice: 4500,
-      url: "https://www.wildberries.ru/catalog/456789/detail.aspx"
-    },
-    {
-      title: "Кроссовки Running",
-      price: 1200,
-      oldPrice: 6000,
-      url: "https://www.wildberries.ru/catalog/567890/detail.aspx"
-    },
-    {
-      title: "Повербанк 20000",
-      price: 700,
-      oldPrice: 3500,
-      url: "https://www.wildberries.ru/catalog/678901/detail.aspx"
-    }
+  // категории поиска WB (реальные направления)
+  const queries = [
+    "рюкзак",
+    "наушники",
+    "кроссовки",
+    "куртка",
+    "смартфон"
   ];
 
-  const products = baseProducts.map(p => {
+  let results = [];
 
+  for (const q of queries) {
+
+    // имитация реального WB поведения (структура как у карточек)
+    const items = [
+      {
+        title: `${q} premium`,
+        price: 800,
+        oldPrice: 4000,
+        image: "https://via.placeholder.com/500x400",
+        url: `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(q)}`
+      },
+      {
+        title: `${q} pro edition`,
+        price: 600,
+        oldPrice: 3000,
+        image: "https://via.placeholder.com/500x400",
+        url: `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(q)}`
+      },
+      {
+        title: `${q} ultra`,
+        price: 1000,
+        oldPrice: 5000,
+        image: "https://via.placeholder.com/500x400",
+        url: `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(q)}`
+      }
+    ];
+
+    results = results.concat(items);
+  }
+
+  const withDiscount = results.map(p => {
     const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
 
     return {
       ...p,
-      discount,
-      image: "https://via.placeholder.com/500x400"
+      discount
     };
   })
-  .filter(p => p.discount >= 70); // 🔥 железный фильтр
+  .filter(p => p.discount >= 70);
 
-  res.status(200).json(products);
+  res.status(200).json(withDiscount);
 }
