@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>SaleHunter PRO</title>
+  <title>SaleHunter PRO 3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -38,6 +38,10 @@
       font-weight: bold;
     }
 
+    .price {
+      margin-top: 5px;
+    }
+
     img {
       width: 100%;
       border-radius: 8px;
@@ -51,6 +55,7 @@
       background: black;
       color: white;
       border-radius: 6px;
+      text-align: center;
     }
   </style>
 </head>
@@ -58,7 +63,7 @@
 <body>
 
 <header>
-🔥 SaleHunter PRO — реальные скидки 70%+
+🔥 SaleHunter PRO — до 1000 ₽ / скидки 70%+
 </header>
 
 <div class="container" id="container"></div>
@@ -82,7 +87,7 @@ async function load() {
 
       <div class="discount">-${p.discount}%</div>
 
-      <div>${p.price} ₽ вместо ${p.oldPrice} ₽</div>
+      <div class="price">${p.price} ₽ вместо ${p.oldPrice} ₽</div>
 
       <img src="${p.image}" />
 
