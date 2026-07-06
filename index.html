@@ -28,11 +28,22 @@
       padding: 15px;
       margin-bottom: 10px;
       border-radius: 10px;
+      cursor: pointer;
     }
 
     .discount {
       color: green;
       font-weight: bold;
+    }
+
+    .btn {
+      margin-top: 10px;
+      display: inline-block;
+      padding: 8px 12px;
+      background: black;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -43,21 +54,64 @@
   🔥 SaleHunter — скидки 70–90%
 </header>
 
-<div class="container" id="container">
+<div class="container" id="container"></div>
 
-  <div class="card">
-    <div>Пример товара Ozon</div>
-    <div class="discount">-75%</div>
-    <div>Цена: 499 ₽ вместо 1999 ₽</div>
-  </div>
+<script>
+const deals = [
+  {
+    title: "Ozon товар 1",
+    oldPrice: 3000,
+    price: 800,
+    marketplace: "Ozon",
+    url: "https://www.ozon.ru"
+  },
+  {
+    title: "WB товар 2",
+    oldPrice: 2500,
+    price: 600,
+    marketplace: "WB",
+    url: "https://www.wildberries.ru"
+  },
+  {
+    title: "WB товар 3",
+    oldPrice: 5000,
+    price: 1000,
+    marketplace: "WB",
+    url: "https://www.wildberries.ru"
+  }
+];
 
-  <div class="card">
-    <div>Пример товара Wildberries</div>
-    <div class="discount">-82%</div>
-    <div>Цена: 349 ₽ вместо 1890 ₽</div>
-  </div>
+function getDiscount(oldPrice, price) {
+  return Math.round(((oldPrice - price) / oldPrice) * 100);
+}
 
-</div>
-<script type="module" src="app.js"></script>
+function render() {
+  const container = document.getElementById("container");
+  container.innerHTML = "";
+
+  deals
+    .filter(d => getDiscount(d.oldPrice, d.price) >= 70)
+    .forEach(d => {
+      const discount = getDiscount(d.oldPrice, d.price);
+
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div><b>${d.title}</b></div>
+        <div class="discount">-${discount}%</div>
+        <div>Цена: ${d.price} ₽ вместо ${d.oldPrice} ₽</div>
+        <a class="btn" href="${d.url}" target="_blank">Открыть товар</a>
+      `;
+
+      card.onclick = () => window.open(d.url, "_blank");
+
+      container.appendChild(card);
+    });
+}
+
+render();
+</script>
+
 </body>
 </html>
