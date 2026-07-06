@@ -11,14 +11,30 @@ function renderDeals(deals) {
       const card = document.createElement("div");
       card.className = "card";
 
+      card.style.cursor = "pointer";
+
+      card.onclick = () => {
+        window.open(d.url, "_blank");
+      };
+
       card.innerHTML = `
-        card.innerHTML = `
-  <div><b>${d.title}</b></div>
-  <div class="discount">-${d.discount}%</div>
-  <div>Цена: ${d.price} ₽ вместо ${d.oldPrice} ₽</div>
-  <div>${d.marketplace}</div>
-  <a href="${d.url}" target="_blank">🔗 Открыть товар</a>
-`;
+        <div><b>${d.title}</b></div>
+        <div class="discount">-${d.discount}%</div>
+        <div>Цена: ${d.price} ₽ вместо ${d.oldPrice} ₽</div>
+        <div>${d.marketplace}</div>
+
+        <button style="
+          margin-top:10px;
+          padding:8px;
+          border:none;
+          background:black;
+          color:white;
+          border-radius:6px;
+          cursor:pointer;
+        ">
+          Открыть товар
+        </button>
+      `;
 
       container.appendChild(card);
     });
