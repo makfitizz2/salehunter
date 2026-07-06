@@ -101,12 +101,17 @@ function render(list){
       const d = discount(i);
 
       card.innerHTML = `
-        <b>${i.title}</b>
-        <div class="discount">-${d}%</div>
-        <div>${i.price} ₽ вместо ${i.oldPrice} ₽</div>
-        <img src="${i.img}" />
-        <div class="btn">Открыть товар</div>
-      `;
+  <b>${i.title}</b>
+  <div class="discount">-${d}%</div>
+  <div>${i.price} ₽ вместо ${i.oldPrice} ₽</div>
+
+  <img src="${i.img}" style="
+    width:100%;
+    border-radius:8px;
+    margin-top:8px;
+  " />
+
+  <
 
       card.onclick = () => {
         window.open("https://www.ozon.ru", "_blank");
