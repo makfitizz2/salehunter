@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>SaleHunter</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       font-family: Arial;
@@ -21,12 +22,13 @@
 
     .container {
       padding: 15px;
+      display: grid;
+      gap: 10px;
     }
 
     .card {
       background: white;
-      padding: 15px;
-      margin-bottom: 10px;
+      padding: 12px;
       border-radius: 10px;
       cursor: pointer;
     }
@@ -36,14 +38,28 @@
       font-weight: bold;
     }
 
+    img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
     .btn {
-      margin-top: 10px;
       display: inline-block;
-      padding: 8px 12px;
+      margin-top: 8px;
+      padding: 6px 10px;
       background: black;
       color: white;
       border-radius: 6px;
       text-decoration: none;
+    }
+
+    input {
+      width: calc(100% - 30px);
+      margin: 10px 15px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -51,66 +67,68 @@
 <body>
 
 <header>
-  🔥 SaleHunter — скидки 70–90%
+🔥 SaleHunter — скидки 70%+
 </header>
+
+<input id="search" placeholder="поиск: наушники, рюкзак, телефон..." />
 
 <div class="container" id="container"></div>
 
 <script>
-const deals = [
-  {
-    title: "Ozon: наушники скидка",
-    oldPrice: 3000,
-    price: 800,
-    marketplace: "Ozon",
-    url: "https://www.ozon.ru/search/?text=наушники"
-  },
-  {
-    title: "WB: рюкзак скидка",
-    oldPrice: 2500,
-    price: 600,
-    marketplace: "WB",
-    url: "https://www.wildberries.ru/catalog/0/search.aspx?search=рюкзак"
-  },
-  {
-    title: "Ozon: часы",
-    oldPrice: 5000,
-    price: 1000,
-    marketplace: "Ozon",
-    url: "https://www.ozon.ru/search/?text=часы"
-  }
-];
+async function load(query = "наушники") {
 
-function getDiscount(oldPrice, price) {
-  return Math.round(((oldPrice - price) / oldPrice) * 100);
-}
-
-function render() {
   const container = document.getElementById("container");
+  container.innerHTML = "Загрузка...";
+
+  const res = await fetch(
+    `https://dummyjson.com/products/search?q=${query}`
+  );
+
+  const data = await res.json();
+
+  const products = data.products.map(p => {
+    const oldPrice = Math.round(p.price * 2);
+    const price = p.price;
+    const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+
+    return {
+      title: p.title,
+      price,
+      oldPrice,
+      discount,
+      image: p.thumbnail,
+      url: `https://www.ozon.ru/search/?text=${encodeURIComponent(p.title)}`
+    };
+  });
+
   container.innerHTML = "";
 
-  deals
-    .filter(d => getDiscount(d.oldPrice, d.price) >= 70)
-    .forEach(d => {
-      const discount = getDiscount(d.oldPrice, d.price);
+  products
+    .filter(p => p.discount >= 70)
+    .forEach(p => {
 
       const card = document.createElement("div");
       card.className = "card";
 
       card.innerHTML = `
-        <div><b>${d.title}</b></div>
-        <div class="discount">-${discount}%</div>
-        <div>Цена: ${d.price} ₽ вместо ${d.oldPrice} ₽</div>
-        <a class="btn" href="${d.url}" target="_blank">Открыть товар</a>
+        <div><b>${p.title}</b></div>
+        <div class="discount">-${p.discount}%</div>
+        <div>${p.price} ₽ вместо ${p.oldPrice} ₽</div>
+        <img src="${p.image}" />
+        <a class="btn" href="${p.url}" target="_blank">Открыть</a>
       `;
 
-      card.onclick = () => window.open(d.url, "_blank");
+      card.onclick = () => window.open(p.url, "_blank");
 
       container.appendChild(card);
     });
 }
 
-render();
+document.getElementById("search").addEventListener("input", (e) => {
+  load(e.target.value);
+});
+
+load();
 </script>
 
 </body>
