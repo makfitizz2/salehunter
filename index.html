@@ -20,6 +20,14 @@
       font-size: 20px;
     }
 
+    input {
+      width: calc(100% - 30px);
+      margin: 10px 15px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
     .container {
       padding: 15px;
       display: grid;
@@ -52,14 +60,8 @@
       color: white;
       border-radius: 6px;
       text-decoration: none;
-    }
-
-    input {
-      width: calc(100% - 30px);
-      margin: 10px 15px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      cursor: pointer;
+      text-align: center;
     }
   </style>
 </head>
@@ -76,52 +78,77 @@
 
 <script>
 const database = [
-  { title: "Беспроводные наушники", price: 600, oldPrice: 3000, img: "https://via.placeholder.com/300", market: "Ozon" },
-  { title: "Игровая мышь", price: 500, oldPrice: 2500, img: "https://via.placeholder.com/300", market: "WB" },
-  { title: "Рюкзак городской", price: 800, oldPrice: 4000, img: "https://via.placeholder.com/300", market: "Ozon" },
-  { title: "Часы спортивные", price: 900, oldPrice: 4500, img: "https://via.placeholder.com/300", market: "WB" },
-  { title: "Кроссовки", price: 1200, oldPrice: 6000, img: "https://via.placeholder.com/300", market: "Ozon" }
+  {
+    title: "Беспроводные наушники",
+    price: 600,
+    oldPrice: 3000,
+    img: "https://via.placeholder.com/400x300",
+    url: "https://www.ozon.ru"
+  },
+  {
+    title: "Игровая мышь",
+    price: 500,
+    oldPrice: 2500,
+    img: "https://via.placeholder.com/400x300",
+    url: "https://www.wildberries.ru"
+  },
+  {
+    title: "Рюкзак городской",
+    price: 800,
+    oldPrice: 4000,
+    img: "https://via.placeholder.com/400x300",
+    url: "https://www.ozon.ru"
+  },
+  {
+    title: "Часы спортивные",
+    price: 900,
+    oldPrice: 4500,
+    img: "https://via.placeholder.com/400x300",
+    url: "https://www.wildberries.ru"
+  },
+  {
+    title: "Кроссовки",
+    price: 1200,
+    oldPrice: 6000,
+    img: "https://via.placeholder.com/400x300",
+    url: "https://www.ozon.ru"
+  }
 ];
 
-function discount(item){
+function getDiscount(item) {
   return Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100);
 }
 
-function render(list){
+function render(list) {
   const container = document.getElementById("container");
   container.innerHTML = "";
 
   list
-    .filter(i => discount(i) >= 70)
+    .filter(i => getDiscount(i) >= 70)
     .forEach(i => {
+
+      const d = getDiscount(i);
 
       const card = document.createElement("div");
       card.className = "card";
 
-      const d = discount(i);
-
       card.innerHTML = `
-  <b>${i.title}</b>
-  <div class="discount">-${d}%</div>
-  <div>${i.price} ₽ вместо ${i.oldPrice} ₽</div>
+        <b>${i.title}</b>
+        <div class="discount">-${d}%</div>
+        <div>${i.price} ₽ вместо ${i.oldPrice} ₽</div>
 
-  <img src="${i.img}" style="
-    width:100%;
-    border-radius:8px;
-    margin-top:8px;
-  " />
+        <img src="${i.img}" />
 
-  <
+        <div class="btn">Открыть товар</div>
+      `;
 
-      card.onclick = () => {
-        window.open("https://www.ozon.ru", "_blank");
-      };
+      card.onclick = () => window.open(i.url, "_blank");
 
       container.appendChild(card);
     });
 }
 
-function search(q){
+function search(q) {
   const result = database.filter(i =>
     i.title.toLowerCase().includes(q.toLowerCase())
   );
@@ -129,43 +156,11 @@ function search(q){
   render(result);
 }
 
-// стартовая загрузка
-search("");
-
-// поиск
 document.getElementById("search").addEventListener("input", (e) => {
   search(e.target.value);
 });
-</script>
 
-  container.innerHTML = "";
-
-  products
-    .filter(p => p.discount >= 70)
-    .forEach(p => {
-
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <div><b>${p.title}</b></div>
-        <div class="discount">-${p.discount}%</div>
-        <div>${p.price} ₽ вместо ${p.oldPrice} ₽</div>
-        <img src="${p.image}" />
-        <a class="btn" href="${p.url}" target="_blank">Открыть</a>
-      `;
-
-      card.onclick = () => window.open(p.url, "_blank");
-
-      container.appendChild(card);
-    });
-}
-
-document.getElementById("search").addEventListener("input", (e) => {
-  load(e.target.value);
-});
-
-load();
+search("");
 </script>
 
 </body>
