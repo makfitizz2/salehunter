@@ -12,11 +12,13 @@ function renderDeals(deals) {
       card.className = "card";
 
       card.innerHTML = `
-        <div><b>${d.title}</b></div>
-        <div class="discount">-${d.discount}%</div>
-        <div>Цена: ${d.price} ₽ вместо ${d.oldPrice} ₽</div>
-        <div>${d.marketplace}</div>
-      `;
+        card.innerHTML = `
+  <div><b>${d.title}</b></div>
+  <div class="discount">-${d.discount}%</div>
+  <div>Цена: ${d.price} ₽ вместо ${d.oldPrice} ₽</div>
+  <div>${d.marketplace}</div>
+  <a href="${d.url}" target="_blank">🔗 Открыть товар</a>
+`;
 
       container.appendChild(card);
     });
