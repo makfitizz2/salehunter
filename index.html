@@ -76,44 +76,34 @@
 
 <div class="container" id="container"></div>
 
-<script>
-const database = [
-  {
-    title: "Беспроводные наушники",
-    price: 600,
-    oldPrice: 3000,
-    img: "https://via.placeholder.com/400x300",
-    url: "https://www.ozon.ru"
-  },
-  {
-    title: "Игровая мышь",
-    price: 500,
-    oldPrice: 2500,
-    img: "https://via.placeholder.com/400x300",
-    url: "https://www.wildberries.ru"
-  },
-  {
-    title: "Рюкзак городской",
-    price: 800,
-    oldPrice: 4000,
-    img: "https://via.placeholder.com/400x300",
-    url: "https://www.ozon.ru"
-  },
-  {
-    title: "Часы спортивные",
-    price: 900,
-    oldPrice: 4500,
-    img: "https://via.placeholder.com/400x300",
-    url: "https://www.wildberries.ru"
-  },
-  {
-    title: "Кроссовки",
-    price: 1200,
-    oldPrice: 6000,
-    img: "https://via.placeholder.com/400x300",
-    url: "https://www.ozon.ru"
-  }
-];
+async function load() {
+
+  const res = await fetch("/api/deals");
+  const products = await res.json();
+
+  const container = document.getElementById("container");
+  container.innerHTML = "";
+
+  products.forEach(p => {
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <b>${p.title}</b>
+      <div class="discount">-${p.discount}%</div>
+      <div>${p.price} ₽ вместо ${p.oldPrice} ₽</div>
+      <img src="${p.image}" />
+      <div class="btn">Открыть</div>
+    `;
+
+    card.onclick = () => window.open(p.url, "_blank");
+
+    container.appendChild(card);
+  });
+}
+
+load();
 
 function getDiscount(item) {
   return Math.round(((item.oldPrice - item.price) / item.oldPrice) * 100);
