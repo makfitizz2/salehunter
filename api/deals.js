@@ -1,38 +1,47 @@
 export default async function handler(req, res) {
 
-  // категории поиска WB (реальные направления)
-  const queries = [
+  const categories = [
     "рюкзак",
     "наушники",
     "кроссовки",
-    "куртка",
-    "смартфон"
+    "футболка",
+    "сумка",
+    "чехол",
+    "платье",
+    "кепка"
   ];
 
   let results = [];
 
-  for (const q of queries) {
+  for (const q of categories) {
 
-    // имитация реального WB поведения (структура как у карточек)
+    // имитация структуры WB (как реальные карточки)
     const items = [
       {
-        title: `${q} premium`,
-        price: 800,
-        oldPrice: 4000,
+        title: `${q} basic`,
+        price: 450,
+        oldPrice: 2000,
         image: "https://via.placeholder.com/500x400",
         url: `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(q)}`
       },
       {
-        title: `${q} pro edition`,
-        price: 600,
-        oldPrice: 3000,
+        title: `${q} pro`,
+        price: 700,
+        oldPrice: 3500,
         image: "https://via.placeholder.com/500x400",
         url: `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(q)}`
       },
       {
         title: `${q} ultra`,
-        price: 1000,
+        price: 900,
         oldPrice: 5000,
+        image: "https://via.placeholder.com/500x400",
+        url: `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(q)}`
+      },
+      {
+        title: `${q} mini`,
+        price: 300,
+        oldPrice: 1500,
         image: "https://via.placeholder.com/500x400",
         url: `https://www.wildberries.ru/catalog/0/search.aspx?search=${encodeURIComponent(q)}`
       }
@@ -41,7 +50,8 @@ export default async function handler(req, res) {
     results = results.concat(items);
   }
 
-  const withDiscount = results.map(p => {
+  const processed = results.map(p => {
+
     const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
 
     return {
@@ -49,7 +59,9 @@ export default async function handler(req, res) {
       discount
     };
   })
-  .filter(p => p.discount >= 70);
+  .filter(p =>
+    p.discount >= 70 && p.price <= 1000
+  );
 
-  res.status(200).json(withDiscount);
+  res.status(200).json(processed);
 }
