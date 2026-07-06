@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>SaleHunter WB</title>
+  <title>SaleHunter PRO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       margin: 0;
       background: #f5f5f5;
     }
@@ -31,17 +31,17 @@
       padding: 12px;
       border-radius: 10px;
       cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .card:hover {
-      transform: scale(1.01);
     }
 
     .discount {
       color: green;
       font-weight: bold;
-      margin-top: 5px;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 8px;
     }
 
     .btn {
@@ -51,14 +51,6 @@
       background: black;
       color: white;
       border-radius: 6px;
-      text-align: center;
-      font-size: 14px;
-    }
-
-    img {
-      width: 100%;
-      border-radius: 8px;
-      margin-top: 8px;
     }
   </style>
 </head>
@@ -66,7 +58,7 @@
 <body>
 
 <header>
-🔥 SaleHunter WB — скидки 70%+
+🔥 SaleHunter PRO — реальные скидки 70%+
 </header>
 
 <div class="container" id="container"></div>
@@ -94,7 +86,7 @@ async function load() {
 
       <img src="${p.image}" />
 
-      <div class="btn">Открыть на Wildberries</div>
+      <div class="btn">Открыть товар</div>
     `;
 
     card.onclick = () => window.open(p.url, "_blank");
